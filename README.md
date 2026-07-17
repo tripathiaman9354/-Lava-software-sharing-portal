@@ -15,6 +15,43 @@ An internal admin/ODM-facing web portal for managing ODMs (Original Design Manuf
 - **Responsive Dashboards** — Separate dashboards for Admin and User roles
 - **Dynamic Thymeleaf Templates** — Fully dynamic, data-driven server-rendered views
 
+## 📸 Screenshots
+
+### Authentication
+| Login | Forgot Password | Verify OTP                                     | Reset Password |
+|---|---|----------------------------------------------------|---|
+| ![Login](screenshots/login.png) | ![Forgot Password](screenshots/forgot-password.png) | ![Verify OTP](screenshots/verify-otp.png) | ![Reset Password](screenshots/reset-password.png) | 
+
+### Dashboards
+| Admin Dashboard | User Dashboard |
+|---|---|
+| ![Admin Dashboard](screenshots/admin-dashboard.png) | ![User Dashboard](screenshots/user-dashboard.png) |
+
+### ODM Management
+| ODM List | Create ODM | Delete/Rename ODM |
+|---|---|---|
+| ![ODM](screenshots/odm.png) | ![Create ODM](screenshots/create-odm.png) | ![Delete/Rename ODM](screenshots/delete-rename-odm.png) |
+
+### Chipset Management
+| Chipset List | Chipset → Project View |
+|---|---|
+| ![Chipset](screenshots/chipset.png) | ![Chipset Project](screenshots/chipset-project.png) |
+
+### Project Management
+| Projects | Create Project | Project Folder View | User Inside Project |
+|---|---|---|---|
+| ![Projects](screenshots/projects.png) | ![Create Project](screenshots/createprojects.png) | ![Project Folder](screenshots/project-folder.png) | ![User Inside Project](screenshots/user-insideproject.png) |
+
+### File Management
+| Software Files | Upload Software | Upload Progress |
+|---|---|---|
+| ![Software Files](screenshots/sofwarefiles.png) | ![Upload Software](screenshots/upload-software.png) | ![Upload Progress](screenshots/uploading-softwareprogess.png) |
+
+### Admin File Browser
+| Admin Folder/Files View |
+|---|
+| ![Admin Folder Files](screenshots/admin-folder-files.png) |
+
 ## 🛠️ Tech Stack
 
 **Backend**
@@ -96,5 +133,5 @@ Actively developed. Core modules (ODM, Chipset, Project management, file sharing
 
 ## 👤 Author
 
-**Aman Kumar Tripathi**
+**Aman Tripathi**
 Full Stack Developer (Java/Spring Boot + React.js)
