@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHIPSETS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <div class="main_container">
+       <div class="header">
+          <div class="header-left">
+                <img th:src="@{/images/Group 8057.png}" class="lava-logo">
+          </div>
+          <div class="header-center">
+                <input type="text" placeholder="Search" class="search-box">
+          </div>
+           <div class="header-right">
+                <div class="user-info">
+                    <span class="username" th:text="${displayName}">User Name</span>
+                    <a th:href="@{/logout}" class="sign-out" style="cursor:pointer; text-decoration:none;">Sign out</a>
+                </div>
+                <img th:src="@{/images/Ellipse 1.png}" class="user-pic">
+           </div>
+       </div>
+        <div class="dashboard-container">
+            <div class="odm-header">
+              <div class="breadcrumb">
+                  <a th:href="@{/dashboard}" class="inactive">Dashboard</a>
+                  <span>›</span>
+                   <a href="#" class="active">Chipsets</a>
+                </div>
+               <button class="add-chipset" id="openChipsetPopup"> <span>+</span> Add Chipset </button>
+            </div>
+            <p th:if="${success}" th:text="${success}" style="color: green; margin-top: 12px;"></p>
+            <p th:if="${warning}" th:text="${warning}" style="color: #b26a00; margin-top: 12px;"></p>
+            <div class="odms" >
+                <div class="odm-card" th:each="chipset:${chipsets}">
+                    <img th:src="@{${chipset.logoPath}}" class="odm-logo" >
+                    <div class="card-content">
+                        <a class="title odm-link"
+                           th:href="@{/dashboard/chipsets/{chipset} (chipset=${chipset.name})}"
+                           th:text="${chipset.name}">
+                        </a>
+                        <p class="update-text">Last Update<br>
+                            <span
+                                th:text="${chipset.lastUpdate != null
+                            ? #temporals.format(chipset.lastUpdate, 'dd-MM-yyyy')
+                            : 'N/A'}" >05-10-2025</span>
+                        </p>
+                        <div class="dots">⋯</div>
+                        <div class="menu-bar">
+                            <div class="menu-item rename-btn" th:attr="data-name=${chipset.name},data-type='chipset'">
+                                <img th:src="@{/images/edit.png}">
+                                <span>Rename</span>
+                            </div>
+                            <div class="menu-item delete-btn" th:attr="data-name=${chipset.name},data-type='chipset'">
+                                <img th:src="@{/images/delete.png}">
+                                <span>Delete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup-odm-create" id="popup-chipset">
+        <div class="popup-win">
+            <form th:action="@{/chipset/create}"
+                  th:object="${chipset}"
+                  method="post"
+                  enctype="multipart/form-data">
+                <div class="popup-title-row">
+                    <p class="create-odm-title">Add Chipset</p>
+                    <span class="close-icon" id="closeChipsetPopupIcon">✕</span>
+                </div>
+                <label>Chipset Name</label>
+                <input id="chipsetName" type="text" th:field="*{name}" placeholder="Qualcomm" required
+                       oninput="this.setCustomValidity('')">
+                <input type="hidden"
+                       id="chipsetNameError"
+                       th:if="${nameError}"
+                       th:value="${nameError}">
+                <label>Chipset Logo</label>
+                <input type="file" name="logoFile" accept="image/*">
+                <div class="popupButtons">
+                    <button type="button" class="cancelBtn" id="closeChipsetPopup">Cancel</button>
+                    <button type="submit" class="createBtn">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script th:src="@{/js/script.js}"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+spring.application.name=loginandregister
+server.port=8089
+
+# Database Configuration
+spring.datasource.url=jdbc:mysql://localhost:3306/your_database_name
+spring.datasource.username=your_db_username
+spring.datasource.password=your_db_password
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+
+#spring.jpa.hibernate.ddl-auto=create
+spring.jpa.hibernate.ddl-auto=update
+spring.jpa.show-sql=true
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+
+server.error.include-message=always
+server.error.include-binding-errors=always
+server.error.include-stacktrace=always
+spring.thymeleaf.cache=false
+
+spring.servlet.multipart.enabled=true
+spring.servlet.multipart.max-file-size=5GB
+spring.servlet.multipart.max-request-size=5GB
+
+# Mail configuration for OTP (forgot password)
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
+spring.mail.username=your_email@gmail.com
+spring.mail.password=your_gmail_app_password
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true

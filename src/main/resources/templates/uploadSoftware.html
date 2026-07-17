@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PROJECT AGNI 4</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="mainContainer">
+    <div class="header">
+        <div class="header-left">
+            <img th:src="@{/images/Group 8057.png}" class="lava-logo">
+        </div>
+        <div class="header-center">
+            <input type="text" placeholder="Search" class="search-box">
+        </div>
+
+        <div class="header-right">
+            <div class="user-info">
+                <span class="username" th:text="${displayName}">User Name</span>
+                <a th:href="@{/logout}" class="sign-out" style="cursor:pointer; text-decoration:none;">Sign out</a>
+            </div>
+            <img th:src="@{${displayImage}}" alt="user-picture" class="user-pic">
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <div class="breadcrumb">
+            <a th:href="@{/odmdashboard}" class="inactive">Dashboard</a>
+            <span>›</span>
+            <a th:href="@{/odmdashboard/projects/{id}(id=${folder.project.id})}" class="inactive" th:text="${folder.project.projectName}">Project AGNI 4</a>
+            <span>›</span>
+            <a href="#" class="active" th:text="${folder.name}">Demo SW</a>
+        </div>
+
+        <!-- Shows real backend result after a reload (covers actual failures too, not just optimistic JS toast) -->
+        <p th:if="${message}" th:text="${message}" style="color:#727272; margin-top:12px; font-size:14px;"></p>
+
+        <div class="upload-container" th:if="${folder.files.isEmpty()}">
+            <form th:action="@{/odmdashboard/projects/{id}/uploadfiles(id=${folder.id})}"
+                  method="post"
+                  enctype="multipart/form-data"
+                  id="uploadForm">
+
+                <div class="upload-box" id="uploadDropzone">
+                    <label for="fileInput">
+                        <img th:src="@{/images/Logo.png}" class="upload-icon" alt="Upload">
+                        <p><span>Click to upload</span> or drag and drop files</p>
+                        <small>( Max file size 5 GB )</small>
+                    </label>
+
+                    <input type="file"
+                           id="fileInput"
+                           name="file"
+                           hidden>
+                </div>
+            </form>
+
+            <!-- Progress box: hidden until a file is chosen -->
+            <div class="uploading-box" id="uploadingBox" style="display:none; position:relative;">
+                <span class="close-cross" id="cancelUploadBtn">✕</span>
+                <p id="uploadingFileName">File name</p>
+                <div class="progress-box">
+                    <div class="inner-progress" id="progressFill" style="width:0%;"></div>
+                    <span class="progress-percent" id="progressPercent">0%</span>
+                </div>
+                <span class="file-size" id="uploadingFileSize">0 MB</span>
+            </div>
+        </div>
+
+        <!-- Success toast: hidden until upload completes -->
+        <div class="successfully-uploaded" id="successToast" style="display:none;">
+            <p id="successFileName">File name</p>
+            <span>Successfully Uploaded</span>
+        </div>
+
+        <div class="odms" th:if="${!folder.files.isEmpty()}" style="margin-top: 25px;">
+            <div class="odm-card" style="height: auto; padding: 10px;" th:each="file : ${folder.files}">
+                <img th:src="@{/images/image-Ql4CLJJZKsPhAqYytC4Z57x3JhdZOY 1 (1).png}" style="width: 40px; height: 40px; margin: 10px;">
+                <div class="card-content" style="padding: 4px 10px 10px 10px;">
+                    <span class="title" th:text="${file.name}">file.pdf</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script th:if="${folder.files.isEmpty()}">
+    const fileInput = document.getElementById("fileInput");
+    const uploadDropzone = document.getElementById("uploadDropzone");
+    const uploadingBox = document.getElementById("uploadingBox");
+    const uploadingFileName = document.getElementById("uploadingFileName");
+    const uploadingFileSize = document.getElementById("uploadingFileSize");
+    const progressFill = document.getElementById("progressFill");
+    const progressPercent = document.getElementById("progressPercent");
+    const cancelUploadBtn = document.getElementById("cancelUploadBtn");
+    const successToast = document.getElementById("successToast");
+    const successFileName = document.getElementById("successFileName");
+
+    let currentXhr = null;
+
+    function formatSize(bytes) {
+        if (bytes >= 1024 * 1024) {
+            return (bytes / (1024 * 1024)).toFixed(1) + " MB";
+        }
+        return (bytes / 1024).toFixed(1) + " KB";
+    }
+
+    fileInput.addEventListener("change", function () {
+        if (!this.files || this.files.length === 0) return;
+        const file = this.files[0];
+
+        uploadDropzone.style.display = "none";
+        uploadingBox.style.display = "block";
+        uploadingFileName.textContent = file.name;
+        uploadingFileSize.textContent = formatSize(file.size);
+        progressFill.style.width = "0%";
+        progressPercent.textContent = "0%";
+
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const xhr = new XMLHttpRequest();
+        currentXhr = xhr;
+        xhr.open("POST", document.getElementById("uploadForm").action, true);
+
+        xhr.upload.addEventListener("progress", function (e) {
+            if (e.lengthComputable) {
+                const percent = Math.round((e.loaded / e.total) * 100);
+                progressFill.style.width = percent + "%";
+                progressPercent.textContent = percent + "%";
+            }
+        });
+
+        xhr.onload = function () {
+            uploadingBox.style.display = "none";
+            if (xhr.status >= 200 && xhr.status < 400) {
+                successFileName.textContent = file.name;
+                successToast.style.display = "block";
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1500);
+            } else {
+                alert("Upload failed. Please try again.");
+                uploadDropzone.style.display = "flex";
+            }
+        };
+
+        xhr.onerror = function () {
+            uploadingBox.style.display = "none";
+            uploadDropzone.style.display = "flex";
+            alert("Upload failed. Please check your connection and try again.");
+        };
+
+        xhr.send(formData);
+    });
+
+    cancelUploadBtn.addEventListener("click", function () {
+        if (currentXhr) {
+            currentXhr.abort();
+        }
+        uploadingBox.style.display = "none";
+        uploadDropzone.style.display = "flex";
+        fileInput.value = "";
+    });
+</script>
+</body>
+</html>

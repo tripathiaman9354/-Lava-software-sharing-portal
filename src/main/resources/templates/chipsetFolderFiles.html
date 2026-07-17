@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${folder.name}">Demo SW</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div class="mainContainer">
+    <div class="header">
+        <div class="header-left">
+            <img th:src="@{/images/Group 8057.png}" class="lava-logo">
+        </div>
+        <div class="header-center">
+            <input type="text" placeholder="Search" class="search-box">
+        </div>
+
+        <div class="header-right">
+            <div class="user-info">
+                <span class="username" th:text="${displayName}">User Name</span>
+                <a th:href="@{/logout}" class="sign-out" style="cursor:pointer; text-decoration:none;">Sign out</a>
+            </div>
+            <img th:src="@{${displayImage}}" alt="user-picture" class="user-pic">
+        </div>
+    </div>
+
+    <div class="dashboard-container">
+        <div class="breadcrumb">
+            <a th:href="@{/dashboard}" class="inactive">Dashboard</a>
+            <span>›</span>
+            <a th:href="@{/dashboard/chipset}" class="inactive">Chipset</a>
+            <span>›</span>
+            <a th:href="@{/dashboard/chipsets/{chipset}(chipset=${chipsetName})}" class="inactive" th:text="${chipsetName}">Mediatek</a>
+            <span>›</span>
+            <a th:href="@{/dashboard/chipsets/{chipset}/projects/{pid}(chipset=${chipsetName},pid=${project.id})}" class="inactive" th:text="${project.projectName}">Project AGNI 4</a>
+            <span>›</span>
+            <a href="#" class="active" th:text="${folder.name}">Demo SW</a>
+        </div>
+
+        <p th:if="${success}" th:text="${success}" style="color: green; margin-top: 12px;"></p>
+        <p th:if="${warning}" th:text="${warning}" style="color: #b26a00; margin-top: 12px;"></p>
+
+        <p th:if="${folder.files.isEmpty()}" style="color:#727272; margin-top: 20px;">No files uploaded yet.</p>
+
+        <div style="display:flex; gap:40px; flex-wrap:wrap; margin-top: 20px;">
+            <div class="android-14 menu-container" th:each="file : ${folder.files}">
+                <img th:src="@{/images/image-Ql4CLJJZKsPhAqYytC4Z57x3JhdZOY 1 (1).png}" class="android-icon">
+                <span th:text="${file.name}">Android 14</span>
+                <div class="menu-dots">⋮</div>
+                <div class="menu-box">
+                    <div class="menu_item move-btn" th:attr="data-file-id=${file.id}">
+                        <img th:src="@{/images/move to.png}">
+                        <span>Move to</span>
+                    </div>
+                    <div class="menu_item copy-btn" th:attr="data-file-id=${file.id}">
+                        <img th:src="@{/images/copy.png}">
+                        <span>Copy</span>
+                    </div>
+                    <div class="menu_item delete-file-btn" th:attr="data-file-id=${file.id},data-file-name=${file.name}">
+                        <img th:src="@{/images/delete.png}">
+                        <span>Delete</span>
+                    </div>
+                    <a class="menu_item" th:href="@{/dashboard/files/{id}/download(id=${file.id})}">
+                        <img th:src="@{/images/download.png}">
+                        <span>Download</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Move to / Copy to popup (shared, target url + button text are set by script.js) -->
+<div class="move-popup" id="popup-move">
+    <div class="move-popup-win">
+        <div class="move-heading-row">
+            <p class="move-title" id="moveTitle">Move to</p>
+            <span class="cross-icon" id="crossIcon">✕</span>
+        </div>
+        <form id="moveForm" method="post">
+            <div class="move-location" th:each="target : ${moveTargets}">
+                <label class="custom-checkbox">
+                    <input type="radio" name="targetFolderId" th:value="${target.id}" required>
+                    <span class="checkmark"></span>
+                    <span th:text="${target.name}">Production</span>
+                </label>
+            </div>
+            <div class="popupButtons">
+                <button type="button" class="cancelBtn" id="close_popup">Cancel</button>
+                <button type="submit" class="moveBtn" id="moveSubmitBtn">Move here</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script th:src="@{/js/script.js}"></script>
+</body>
+</html>
